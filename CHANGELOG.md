@@ -13,3 +13,35 @@ CHANGELOG.md des LMOnext-Kernprojekts unter den Abschnitten
 - Als eigenständiges addon.json-Paket verpackt (Templates/Sprachdateien
   jetzt lokal im Addon statt zentral im Core), installierbar über
   Administrator → Addons.
+
+## addon/viewer/lmo-viewer.php
+
+- Changelog: 3.1.0 - Alle hartcodierten deutschen Texte durch tf()-Aufrufe ersetzt (Seitentitel, Hinweis "keine Spiele", Fehlermeldung fehlende Liga-ID, Wochentagskürzel - letztere über die bereits vorhandenen Core-Schlüssel liga_weekday_*). Wichtiger Bugfix dabei: der loadLanguages()-Aufruf nutzte fälschlich den Ordnernamen "viewer" statt des in addon.json deklarierten Manifest-Namens "spieltag-viewer" - dadurch griffen die Sprachdateien bislang nie, unabhängig davon, ob sie vorhanden waren.
+
+## Sprachdateien (lang/de.php, lang/en.php)
+
+- Neu hinzugefügt: enthalten jetzt die 4 vw_*-Schlüssel für Titel, Hinweistexte
+  und Fehlermeldungen des Viewer-Addons.
+
+## min_core_version-Korrektur
+
+- min_core_version von "1.4.0" auf "1.9.0" korrigiert (Copy-Paste-Rest aus
+  einer älteren internen Versionierung, faktisch wirkungslos, da niedriger
+  als jede real existierende LMOnext-Version - AddonManager konnte damit nie
+  eine zu alte Core-Version blockieren). "1.9.0" ist die tatsächliche
+  LMOnext-Core-Version, ab der der Addon-Manager überhaupt existiert.
+
+## Version 3.2.0 (Sicherheitsüberarbeitung)
+
+- lmo-viewer.php 3.2.0: Aufruf-Erkennung auf die neue Konstante
+  LMO_ADDON_STANDALONE_CALL umgestellt (gesetzt vom neuen zentralen
+  Controller /addon-run.php). Der direkte URL-Aufruf ist per
+  addon/.htaccess jetzt komplett gesperrt - Einbettungen müssen ab sofort
+  über /addon-run.php?addon=spieltag-viewer&file=lmo-viewer.php&...
+  laufen, NICHT mehr über /addon/viewer/lmo-viewer.php.
+- Neues Manifest-Feld "standalone_entrypoints": ["lmo-viewer.php"].
+- Asset-Pfadauflösung (vwProjectRootUrlPrefix()) nutzt jetzt bevorzugt
+  die vom Controller gelieferte LMO_ADDON_WEB_BASE.
+
+**WICHTIG für bestehende Einbettungen:** URL wie oben anpassen, falls
+bereits per iframe/URL extern eingebunden.

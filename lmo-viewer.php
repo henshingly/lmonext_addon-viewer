@@ -2,7 +2,7 @@
 /**
  * Project: LMOnext
  * Filename: addon/viewer/lmo-viewer.php
- * Fileversion: 3.0.1
+ * Fileversion: 3.2.0
  *
  * PHP version 8.2
  *
@@ -46,12 +46,15 @@ declare(strict_types=1);
 
 use LMOnext\Liga\LigaService;
 
-$vwIsDirectCall = basename($_SERVER['SCRIPT_NAME'] ?? '') === 'lmo-viewer.php';
+$vwIsDirectCall = defined('LMO_ADDON_STANDALONE_CALL');
 require_once __DIR__ . '/../../frontend/bootstrap.php';
 
-// Standalone-Addon: eigene Sprachdateien explizit laden.
+// Standalone-Addon: eigene Sprachdateien explizit laden. Wichtig: der Name
+// muss dem manifest['name'] aus addon.json entsprechen ("spieltag-viewer"),
+// NICHT dem Ordnernamen "viewer" - AddonManager führt Addons intern über
+// den Manifest-Namen (siehe AddonManager::discover()).
 if (function_exists('addonManager')) {
-    \addonManager()->loadLanguages('viewer');
+    \addonManager()->loadLanguages('spieltag-viewer');
 }
 
 // Dieses Addon ist bewusst zum Einbetten via iframe auf fremden Websites
@@ -71,6 +74,10 @@ function vwProjectRootUrlPrefix() : string
 {
     static $prefix = null;
     if ($prefix !== null) return $prefix;
+    if (defined('LMO_ADDON_WEB_BASE')) {
+        $prefix = rtrim(dirname(rtrim(LMO_ADDON_WEB_BASE, '/'), 2), '/') . '/';
+        return $prefix;
+    }
     $projectRootDisk = rtrim(str_replace('\\','/', dirname(__DIR__, 2)), '/');
     $scriptFilename  = str_replace('\\','/', (string)($_SERVER['SCRIPT_FILENAME'] ?? ''));
     $scriptName      = (string)($_SERVER['SCRIPT_NAME'] ?? '');
@@ -81,7 +88,7 @@ function vwProjectRootUrlPrefix() : string
             return $prefix;
         }
     }
-    $prefix = (basename($_SERVER['SCRIPT_NAME'] ?? '') === basename(__FILE__)) ? '../../' : '';
+    $prefix = defined('LMO_ADDON_STANDALONE_CALL') ? '../../' : '';
     return $prefix;
 }
 
@@ -195,7 +202,7 @@ function vwRenderMatches(array $ligenIds, \DateTime $von, \DateTime $bis, string
         }
         if ($rows === '') {
             $rows = '<tr class="vw-empty"><td colspan="5" style="text-align:center;color:#9098a8;padding:10px;font-style:italic">'
-                  . ($von->format('Y-m-d') === $bis->format('Y-m-d') ? 'Keine Spiele an diesem Tag.' : 'Keine Spiele im Zeitraum.')
+                  . h($von->format('Y-m-d') === $bis->format('Y-m-d') ? tf('vw_keine_spiele_tag') : tf('vw_keine_spiele_zeitraum'))
                   . '</td></tr>';
         }
         $block = $tpl['ligaTpl'];
@@ -231,7 +238,11 @@ function vwRenderTilesPage(array $ligenIds, \DateTime $windowStart, \DateTime $s
 
     // Kacheln
     $today = new \DateTime('today');
-    $dayNames = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+    $dayNames = [
+        tf('liga_weekday_so'), tf('liga_weekday_mo'), tf('liga_weekday_di'),
+        tf('liga_weekday_mi'), tf('liga_weekday_do'), tf('liga_weekday_fr'),
+        tf('liga_weekday_sa'),
+    ];
     $tilesHtml = '';
     for ($i = 0; $i < 7; $i++) {
         $d = (clone $windowStart)->modify("+$i days");
@@ -291,14 +302,14 @@ $vwTemplate = str_replace('..', '', basename($vwTemplate));
 if ($vwIsDirectCall) {
     header('Content-Type: text/html; charset=utf-8');
     echo '<!DOCTYPE html><html><head><meta charset="utf-8">'
-        . '<title>Spiel&uuml;bersicht</title>'
+        . '<title>' . h(tf('vw_titel')) . '</title>'
         . '<style>html,body{margin:0;padding:8px;background:transparent;}</style>'
         . '</head><body>' . "\n";
 }
 
 if (count($vwLigenIds) === 0) {
     echo '<p style="font-family:sans-serif;color:#697182;padding:12px">'
-        . h('Bitte mindestens eine Liga-ID angeben (z.B. vw_ligen=3,7).') . '</p>';
+        . h(tf('vw_bitte_liga_id')) . '</p>';
     if ($vwIsDirectCall) echo "\n</body></html>";
     return;
 }

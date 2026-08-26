@@ -1,7 +1,8 @@
 {
     "name": "spieltag-viewer",
-    "version": "3.0.1",
+    "version": "3.2.0",
     "type": "standalone",
+    "standalone_entrypoints": ["lmo-viewer.php"],
     "description": {
         "de": "Spieltag-Viewer zeigt Spielübersichten über mehrere Ligen in einem wählbaren Zeitraum (Standard- oder Kachel-Template).",
         "en": "Matchday viewer shows match overviews across multiple leagues in a selectable time range (standard or tile template)."
