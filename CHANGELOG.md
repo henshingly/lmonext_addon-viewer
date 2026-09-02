@@ -31,6 +31,10 @@ CHANGELOG.md des LMOnext-Kernprojekts unter den Abschnitten
   eine zu alte Core-Version blockieren). "1.9.0" ist die tatsächliche
   LMOnext-Core-Version, ab der der Addon-Manager überhaupt existiert.
 
+## Version 3.2.1
+
+- 7 Wochentag-Sprachschlüssel ergänzt (liga_weekday_mo/di/mi/do/fr/sa/so, addon/viewer/lang/de.php + en.php) - bei systematischer Prüfung aller Addon-Sprachdateien festgestellt: diese Schlüssel werden nur von diesem Addon genutzt, standen aber noch in der Core-Sprachdatei (jetzt dort entfernt, siehe lang/frontend/de.php 1.50.0). Funktional keine Änderung - nur die korrekte Zuordnung.
+
 ## Version 3.2.0 (Sicherheitsüberarbeitung)
 
 - lmo-viewer.php 3.2.0: Aufruf-Erkennung auf die neue Konstante
