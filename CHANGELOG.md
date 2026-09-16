@@ -31,6 +31,15 @@ CHANGELOG.md des LMOnext-Kernprojekts unter den Abschnitten
   eine zu alte Core-Version blockieren). "1.9.0" ist die tatsächliche
   LMOnext-Core-Version, ab der der Addon-Manager überhaupt existiert.
 
+## Version 3.2.2 (Dokumentations-Bugfix)
+
+- Bugfix (siehe ewige-tabelle CHANGELOG.md 1.3.2 fuer den vollstaendigen
+  Hintergrund zur systematischen Pruefung): gleich drei Stellen im
+  Datei-Kopf-Kommentar ("Per URL:" x2, "Per IFrame:" x1) zeigten einen
+  direkten, durch addon/.htaccess gesperrten Pfad (.../lmo-viewer.php?...).
+  Korrigiert auf addon-run.php?addon=spieltag-viewer&file=lmo-viewer.php&...
+  - die Standalone-Erkennung selbst war bereits korrekt.
+
 ## Version 3.2.1
 
 - 7 Wochentag-Sprachschlüssel ergänzt (liga_weekday_mo/di/mi/do/fr/sa/so, addon/viewer/lang/de.php + en.php) - bei systematischer Prüfung aller Addon-Sprachdateien festgestellt: diese Schlüssel werden nur von diesem Addon genutzt, standen aber noch in der Core-Sprachdatei (jetzt dort entfernt, siehe lang/frontend/de.php 1.50.0). Funktional keine Änderung - nur die korrekte Zuordnung.

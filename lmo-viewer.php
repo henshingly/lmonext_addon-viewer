@@ -2,7 +2,7 @@
 /**
  * Project: LMOnext
  * Filename: addon/viewer/lmo-viewer.php
- * Fileversion: 3.2.0
+ * Fileversion: 3.2.1
  *
  * PHP version 8.2
  *
@@ -20,7 +20,8 @@
  *   $vw_bis   = '31.03.2026';   // optional, Standard: heute+7
  *   include(__DIR__.'/addon/viewer/lmo-viewer.php');
  *
- *   Per URL:  .../lmo-viewer.php?vw_ligen=3,7&vw_von=01.03.2026&vw_bis=31.03.2026
+ *   Per IFrame (ueber addon-run.php, siehe Hinweis unten):
+ *   .../addon-run.php?addon=spieltag-viewer&file=lmo-viewer.php&vw_ligen=3,7&vw_von=01.03.2026&vw_bis=31.03.2026
  *
  * Variante 2 – Tages-Kacheln (Template "kacheln"):
  *
@@ -28,9 +29,10 @@
  *   $vw_template = 'kacheln';
  *   include(__DIR__.'/addon/viewer/lmo-viewer.php');
  *
- *   Per URL:  .../lmo-viewer.php?vw_ligen=3,7&vw_template=kacheln
- *   Per IFrame:
- *   <iframe src=".../lmo-viewer.php?vw_ligen=3,7&vw_template=kacheln" ...></iframe>
+ *   Per IFrame (ueber den zentralen Standalone-Controller, siehe
+ *   addon-run.php im Projekt-Root - direkte Aufrufe der .php-Datei sind
+ *   aus Sicherheitsgruenden per addon/.htaccess gesperrt):
+ *   <iframe src=".../addon-run.php?addon=spieltag-viewer&file=lmo-viewer.php&vw_ligen=3,7&vw_template=kacheln" ...></iframe>
  *
  *   Zusatz-Parameter für Variante 2:
  *   vw_start  Startdatum der Kachel-Woche (Standard: aktueller Sonntag)
